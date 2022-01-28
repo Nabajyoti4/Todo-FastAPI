@@ -46,7 +46,6 @@ async def create_todo(todo: Todo, db: Session = Depends(get_db)):
         'transaction': 'Succesfull'
     }
 
-
 @app.put('/{todo_id}')
 async def update_todo(todo_id: int,todo: Todo, db: Session = Depends(get_db)):
     todo_model = db.query(models.Todos).filter(models.Todos.id == todo_id).first()
