@@ -1,10 +1,13 @@
+import sys
+sys.path.append('..')
+
 from typing import Optional
-from fastapi import FastAPI, Depends, HTTPException, status
-from . import models
-from .schemas import CreateUser
+from fastapi import Depends, HTTPException, status, APIRouter
+from .. import models
+from ..schemas import CreateUser
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from .database import SessionLocal, engine
+from ..database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta, datetime
 from jose import jwt, JWTError
@@ -18,7 +21,11 @@ models.Base.metadata.create_all(bind=engine)
 
 oauth_bearer = OAuth2PasswordBearer(tokenUrl="token")
 
-app = FastAPI()
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    responses={401: {"description": "Unauthorized"}}
+)
 
 def get_db():
     db = SessionLocal()
@@ -90,7 +97,7 @@ def create_access_token(username: str, user_id : int, expires_delta: Optional[ti
     
 
 
-@app.post('/create/user')
+@router.post('/create/user')
 async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)):
     """
     Create a new user
@@ -117,7 +124,7 @@ async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)
 
 
 
-@app.post("/login/access-token")
+@router.post("/login/access-token")
 async def login_for_access_token(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
