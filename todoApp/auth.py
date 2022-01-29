@@ -95,29 +95,33 @@ async def create_new_user(create_user: CreateUser, db: Session = Depends(get_db)
     """
     Create a new user
     """
-    create_user_model = models.Users()
-    create_user_model.username = create_user.username
-    create_user_model.email = create_user.email
-    create_user_model.first_name = create_user.first_name
-    create_user_model.last_name = create_user.last_name
-    
-    hash_password = get_password_hash(create_user.password)
-    create_user_model.hashed_password = hash_password
-    create_user_model.is_active = True
+    try:
+        create_user_model = models.Users()
+        create_user_model.username = create_user.username
+        create_user_model.email = create_user.email
+        create_user_model.first_name = create_user.first_name
+        create_user_model.last_name = create_user.last_name
+        
+        hash_password = get_password_hash(create_user.password)
+        create_user_model.hashed_password = hash_password
+        create_user_model.is_active = True
 
-    db.add(create_user_model)
-    db.commit()
+        db.add(create_user_model)
+        db.commit()
 
-    return {
-        "message": "User created successfully"
-    }
+        return {
+            "message": "User created successfully"
+        }
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
+
 
 
 @app.post("/login/access-token")
 async def login_for_access_token(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
-):
+    ):
     """
     OAuth2 compatible token login, get an access token for future requests
     """
