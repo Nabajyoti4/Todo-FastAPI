@@ -3,15 +3,15 @@ sys.path.append('..')
 
 from typing import Optional
 from fastapi import Depends, HTTPException, status, APIRouter
-from .. import models
-from ..schemas import CreateUser
+import models
+from schemas import CreateUser
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from ..database import SessionLocal, engine
+from database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta, datetime
 from jose import jwt, JWTError
-from ..config import settings
+from config import settings
 
 SECRET_KEY=settings.secret_key
 ALGORITHM=settings.algorithm

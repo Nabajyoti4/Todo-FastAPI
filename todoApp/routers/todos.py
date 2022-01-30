@@ -2,9 +2,9 @@ import sys
 sys.path.append('..')
 
 from fastapi import Depends, HTTPException, APIRouter
-from todoApp.schemas import Todo
-from .. import models
-from ..database import SessionLocal, engine
+from schemas import Todo
+import models
+from database import SessionLocal, engine
 from sqlalchemy.orm import Session
 from .auth import get_current_user, get_user_exception
 
