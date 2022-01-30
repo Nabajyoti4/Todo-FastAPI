@@ -11,9 +11,10 @@ from ..database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import timedelta, datetime
 from jose import jwt, JWTError
+from ..config import settings
 
-SECRET_KEY="NKlgHwcgjaj34jk666643klhkklii79k"
-ALGORITHM="HS256"
+SECRET_KEY=settings.secret_key
+ALGORITHM=settings.algorithm
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
